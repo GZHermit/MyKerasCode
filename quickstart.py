@@ -12,9 +12,21 @@ from keras.optimizers import SGD
 # model.add(LSTM(32, input_shape=(10, 11)))
 # model.add(Activation('relu'))
 
+# 建立模型
 model = Sequential()
-model.add(Dense(64, init='uniform', input_dim=10))
+model.add(layer=Dense(output_dim=1, init='uniform', input_dim=512))
 model.add(Activation('tanh'))
 model.add(Activation('softmax'))
 
+# 设置优化器，即梯度下降函数
 sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
+# 对模型进行编译
+model.compile(loss='mean_squared_error', optimizer=sgd, metrics=['accuracy'])
+
+import numpy as np
+
+# 生成输入数据
+data = np.random.random((1000, 512))
+labels = np.random.randint(2, size=(1000, 1))
+# 运行模型
+model.fit(x=data, y=labels, batch_size=50, nb_epoch=10)
